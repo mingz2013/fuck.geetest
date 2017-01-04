@@ -1,11 +1,14 @@
 # -*- coding:utf-8 -*-
 __author__ = 'zhaojm'
 
-from PIL import Image
+import random
 import time
 
+from PIL import Image
 from selenium import webdriver
 from selenium.webdriver import ActionChains
+
+from MyActionChains import MyActionChains
 
 
 def new_driver():
@@ -81,6 +84,30 @@ def get_diff_x(im1, im2):
     return -1
 
 
+def get_track(length):
+    """
+    根据缺口的位置模拟x轴移动的轨迹
+    :param length:
+    :return:
+    """
+
+    list = []
+
+    # 间隔通过随机范围函数来获得
+    x = random.randint(1, 3)
+
+    while length - x >= 5:
+        list.append(x)
+
+        length = length - x
+        x = random.randint(1, 3)
+
+    for i in xrange(length):
+        list.append(1)
+
+    return list
+
+
 def main():
     driver = new_driver()
     driver.get("http://127.0.0.1:5000")  # 访问首页
@@ -105,19 +132,27 @@ def main():
 
     # 找到滑块
     btn1 = driver.find_element_by_css_selector('div[class="gt_slider_knob gt_show"]')
-    action_chains = ActionChains(driver)
-    # action_chains.click_and_hold(btn1) # 按住滑块
-    # action_chains.perform()
-    # action_chains.move_by_offset(x - 5, 0)
-    # # action_chains.perform()
-    # time.sleep(1)
-    # action_chains.release()
 
-    action_chains.drag_and_drop_by_offset(btn1, x - 5, 0)
-    action_chains.perform()
+    actions = MyActionChains(driver)
+    actions.click_and_hold(btn1)
+    actions.sleep(random.random())
 
-    print "over and sleeping..."
-    time.sleep(10000)
+    print "第二步，拖动元素"
+    # 生成x的移动轨迹点
+    track_list = get_track(x - 8)
+    # track_string = ""
+    for track in track_list:
+        # track_string += "{%d,%d}," % (track + 22, 22 + random.random())
+        actions.move_by_offset(track, random.random())
+        # 间隔时间也通过随机函数来获得
+        actions.sleep(random.randint(2000, 3000) / 1000)
+        # print track_string
+    actions.release()
+    actions.perform()
+
+    time.sleep(50)
+
+    driver.quit()
 
 
 if __name__ == "__main__":
