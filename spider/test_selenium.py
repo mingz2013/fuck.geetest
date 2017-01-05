@@ -139,13 +139,13 @@ def main():
 
     print "第二步，拖动元素"
     # 生成x的移动轨迹点
-    track_list = get_track(x - 8)
+    track_list = get_track(x - 6)
     # track_string = ""
     for track in track_list:
         # track_string += "{%d,%d}," % (track + 22, 22 + random.random())
         actions.move_by_offset(track, random.random())
         # 间隔时间也通过随机函数来获得
-        actions.sleep(random.randint(2000, 3000) / 1000)
+        actions.sleep(random.randint(200, 300) / 1000)
         # print track_string
     actions.release()
     actions.perform()
