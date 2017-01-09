@@ -108,6 +108,16 @@ def get_track(length):
     return list
 
 
+def get_track_2(x, t):
+    """
+    根据滑动距离和时间,创建滑动轨迹
+    :param x:
+    :param t:
+    :return:
+    """
+    pass
+
+
 def main():
     driver = new_driver()
     driver.get("http://127.0.0.1:5000")  # 访问首页
